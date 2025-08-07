@@ -40,8 +40,8 @@ class _NavHomePageState extends State<NavHomePage> {
 
   Future<void> fetchPath(List<int> start, List<int> end) async {
     // final uri = Uri.parse('http://10.0.2.2:5000/path'); 
-    // final uri = Uri.parse('http://192.168.110.229:5000/path');
-    final uri = Uri.parse('http://192.168.137.1:5000/path');
+    final uri = Uri.parse('http://192.168.110.229:5000/path');
+    // final uri = Uri.parse('http://192.168.137.1:5000/path');
     final response = await http.post(uri,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'start': start, 'end': end}),
