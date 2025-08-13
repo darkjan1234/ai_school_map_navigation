@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tupi SEAIT Map Editor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-warning { background: #ffc107; color: black; }
+        
+        .grid-container {
+            display: inline-block;
+            border: 2px solid #333;
+            margin: 20px 0;
+        }
+        .grid {
+            display: grid;
+            gap: 1px;
+            background-color: #333;
+        }
+        .cell {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .cell.walkable { background-color: #fff; }
+        .cell.wall { background-color: #333; color: white; }
+        .cell.stairs { background-color: #ffc107; }
+        .cell.elevator { background-color: #17a2b8; color: white; }
+        .cell.room { background-color: #28a745; color: white; }
+        
+        .legend {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        .room-form {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        input, select, textarea {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        
+        .output {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        textarea.json-output {
+            width: 100%;
+            height: 200px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗺️ Tupi SEAIT Map Editor</h1>
+            <p>Create digital maps for your school navigation system</p>
+        </div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label>Grid Size:</label>
+                <div>
+                    <input type="number" id="gridRows" value="15" min="5" max="30" style="width: 60px;">
+                    x
+                    <input type="number" id="gridCols" value="15" min="5" max="30" style="width: 60px;">
+                    <button class="btn-primary" onclick="createGrid()">Create Grid</button>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <label>Paint Mode:</label>
+                <select id="paintMode">
+                    <option value="0">Walkable</option>
+                    <option value="1">Wall</option>
+                    <option value="2">Stairs</option>
+                    <option value="3">Elevator</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label>Actions:</label>
+                <div>
+                    <button class="btn-secondary" onclick="clearGrid()">Clear All</button>
+                    <button class="btn-warning" onclick="addBorders()">Add Borders</button>
+                    <button class="btn-success" onclick="generateJSON()">Generate JSON</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color walkable"></div>
+                <span>Walkable (0)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color wall"></div>
+                <span>Wall (1)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color stairs"></div>
+                <span>Stairs (2)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color elevator"></div>
+                <span>Elevator (3)</span>
+            </div>
+        </div>
+        
+        <div class="grid-container">
+            <div id="grid" class="grid"></div>
+        </div>
+        
+        <div class="room-form">
+            <h3>Add Room</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Room ID:</label>
+                    <input type="text" id="roomId" placeholder="e.g., 101">
+                </div>
+                <div class="form-group">
+                    <label>Room Name:</label>
+                    <input type="text" id="roomName" placeholder="e.g., Computer Lab">
+                </div>
+                <div class="form-group">
+                    <label>Type:</label>
+                    <select id="roomType">
+                        <option value="classroom">Classroom</option>
+                        <option value="laboratory">Laboratory</option>
+                        <option value="office">Office</option>
+                        <option value="restroom">Restroom</option>
+                        <option value="library">Library</option>
+                        <option value="cafeteria">Cafeteria</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Department:</label>
+                    <input type="text" id="roomDept" placeholder="e.g., IT Department">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Row:</label>
+                    <input type="number" id="roomRow" min="0" value="0">
+                </div>
+                <div class="form-group">
+                    <label>Column:</label>
+                    <input type="number" id="roomCol" min="0" value="0">
+                </div>
+                <div class="form-group">
+                    <label>Description:</label>
+                    <input type="text" id="roomDesc" placeholder="Brief description">
+                </div>
+                <div class="form-group">
+                    <label></label>
+                    <button class="btn-success" onclick="addRoom()">Add Room</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="output">
+            <h3>Generated JSON</h3>
+            <textarea id="jsonOutput" class="json-output" readonly></textarea>
+            <br><br>
+            <button class="btn-primary" onclick="downloadJSON()">Download JSON</button>
+            <button class="btn-secondary" onclick="copyJSON()">Copy to Clipboard</button>
+        </div>
+    </div>
+
+    <script>
+        let grid = [];
+        let rooms = [];
+        let specialLocations = {};
+        let gridRows = 15;
+        let gridCols = 15;
+
+        function createGrid() {
+            gridRows = parseInt(document.getElementById('gridRows').value);
+            gridCols = parseInt(document.getElementById('gridCols').value);
+            
+            grid = Array(gridRows).fill().map(() => Array(gridCols).fill(0));
+            rooms = [];
+            specialLocations = {};
+            
+            renderGrid();
+        }
+
+        function renderGrid() {
+            const gridElement = document.getElementById('grid');
+            gridElement.style.gridTemplateColumns = `repeat(${gridCols}, 30px)`;
+            gridElement.innerHTML = '';
+            
+            for (let row = 0; row < gridRows; row++) {
+                for (let col = 0; col < gridCols; col++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+                    cell.onclick = () => paintCell(row, col);
+                    
+                    updateCellAppearance(cell, grid[row][col]);
+                    gridElement.appendChild(cell);
+                }
+            }
+        }
+
+        function updateCellAppearance(cell, value) {
+            cell.className = 'cell';
+            switch (value) {
+                case 0: cell.classList.add('walkable'); cell.textContent = ''; break;
+                case 1: cell.classList.add('wall'); cell.textContent = '█'; break;
+                case 2: cell.classList.add('stairs'); cell.textContent = 'S'; break;
+                case 3: cell.classList.add('elevator'); cell.textContent = 'E'; break;
+            }
+        }
+
+        function paintCell(row, col) {
+            const mode = parseInt(document.getElementById('paintMode').value);
+            grid[row][col] = mode;
+            
+            const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+            updateCellAppearance(cell, mode);
+        }
+
+        function clearGrid() {
+            grid = Array(gridRows).fill().map(() => Array(gridCols).fill(0));
+            renderGrid();
+        }
+
+        function addBorders() {
+            for (let col = 0; col < gridCols; col++) {
+                grid[0][col] = 1;
+                grid[gridRows-1][col] = 1;
+            }
+            for (let row = 0; row < gridRows; row++) {
+                grid[row][0] = 1;
+                grid[row][gridCols-1] = 1;
+            }
+            renderGrid();
+        }
+
+        function addRoom() {
+            const room = {
+                id: document.getElementById('roomId').value,
+                name: document.getElementById('roomName').value,
+                type: document.getElementById('roomType').value,
+                floor: 1,
+                position: {
+                    row: parseInt(document.getElementById('roomRow').value),
+                    col: parseInt(document.getElementById('roomCol').value),
+                    x: parseFloat(document.getElementById('roomCol').value),
+                    y: parseFloat(document.getElementById('roomRow').value)
+                },
+                description: document.getElementById('roomDesc').value,
+                department: document.getElementById('roomDept').value,
+                isAccessible: true,
+                amenities: []
+            };
+            
+            if (room.id && room.name) {
+                rooms.push(room);
+                alert(`Room "${room.name}" added successfully!`);
+                
+                // Clear form
+                document.getElementById('roomId').value = '';
+                document.getElementById('roomName').value = '';
+                document.getElementById('roomDesc').value = '';
+                document.getElementById('roomDept').value = '';
+            } else {
+                alert('Please fill in Room ID and Name');
+            }
+        }
+
+        function generateJSON() {
+            const mapData = {
+                id: "tupi_seait_main",
+                name: "Tupi SEAIT Main Building",
+                description: "Digital map created with Map Editor",
+                floors: [{
+                    number: 1,
+                    name: "Ground Floor",
+                    grid: grid,
+                    rooms: rooms,
+                    specialLocations: specialLocations
+                }]
+            };
+            
+            const jsonString = JSON.stringify(mapData, null, 2);
+            document.getElementById('jsonOutput').value = jsonString;
+        }
+
+        function downloadJSON() {
+            const jsonString = document.getElementById('jsonOutput').value;
+            if (!jsonString) {
+                alert('Please generate JSON first');
+                return;
+            }
+            
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'tupi_seait_map.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function copyJSON() {
+            const jsonOutput = document.getElementById('jsonOutput');
+            jsonOutput.select();
+            document.execCommand('copy');
+            alert('JSON copied to clipboard!');
+        }
+
+        // Initialize
+        createGrid();
+    </script>
+</body>
+</html>
