@@ -1,0 +1,223 @@
+{
+  "id": "tupi_seait_main",
+  "name": "Tupi SEAIT Main Building",
+  "description": "Main academic building of Tupi SEAIT School",
+  "floors": [
+    {
+      "number": 1,
+      "name": "Ground Floor",
+      "grid": [
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1],
+        [1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 2, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1],
+        [1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+      ],
+      "rooms": [
+        {
+          "id": "101",
+          "name": "Room 101 - Computer Laboratory",
+          "type": "laboratory",
+          "floor": 1,
+          "position": {
+            "row": 3,
+            "col": 3,
+            "x": 3.0,
+            "y": 3.0
+          },
+          "description": "Main computer laboratory with 30 workstations",
+          "department": "Information Technology",
+          "isAccessible": true,
+          "amenities": ["computers", "projector", "air_conditioning", "whiteboard"]
+        },
+        {
+          "id": "102",
+          "name": "Room 102 - Classroom A",
+          "type": "classroom",
+          "floor": 1,
+          "position": {
+            "row": 3,
+            "col": 11,
+            "x": 11.0,
+            "y": 3.0
+          },
+          "description": "General classroom for 40 students",
+          "department": "General Education",
+          "isAccessible": true,
+          "amenities": ["projector", "whiteboard", "air_conditioning"]
+        },
+        {
+          "id": "103",
+          "name": "Room 103 - Faculty Office",
+          "type": "office",
+          "floor": 1,
+          "position": {
+            "row": 7,
+            "col": 3,
+            "x": 3.0,
+            "y": 7.0
+          },
+          "description": "Faculty office for IT department",
+          "department": "Information Technology",
+          "isAccessible": true,
+          "amenities": ["computers", "printer", "air_conditioning"]
+        },
+        {
+          "id": "104",
+          "name": "Room 104 - Library",
+          "type": "library",
+          "floor": 1,
+          "position": {
+            "row": 7,
+            "col": 11,
+            "x": 11.0,
+            "y": 7.0
+          },
+          "description": "School library and study area",
+          "department": "Academic Resources",
+          "isAccessible": true,
+          "amenities": ["books", "computers", "study_tables", "quiet_zone"]
+        },
+        {
+          "id": "restroom_1f",
+          "name": "Restroom - Ground Floor",
+          "type": "restroom",
+          "floor": 1,
+          "position": {
+            "row": 1,
+            "col": 7,
+            "x": 7.0,
+            "y": 1.0
+          },
+          "description": "Public restroom",
+          "department": "Facilities",
+          "isAccessible": true,
+          "amenities": ["wheelchair_accessible"]
+        }
+      ],
+      "specialLocations": {
+        "main_entrance": {
+          "row": 9,
+          "col": 7,
+          "x": 7.0,
+          "y": 9.0
+        },
+        "stairs_1": {
+          "row": 6,
+          "col": 7,
+          "x": 7.0,
+          "y": 6.0
+        },
+        "elevator_1": {
+          "row": 1,
+          "col": 7,
+          "x": 7.0,
+          "y": 1.0
+        }
+      }
+    },
+    {
+      "number": 2,
+      "name": "Second Floor",
+      "grid": [
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1],
+        [1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 2, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1],
+        [1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+      ],
+      "rooms": [
+        {
+          "id": "201",
+          "name": "Room 201 - Physics Laboratory",
+          "type": "laboratory",
+          "floor": 2,
+          "position": {
+            "row": 3,
+            "col": 3,
+            "x": 3.0,
+            "y": 3.0
+          },
+          "description": "Physics laboratory with experimental equipment",
+          "department": "Science",
+          "isAccessible": true,
+          "amenities": ["lab_equipment", "projector", "safety_equipment"]
+        },
+        {
+          "id": "202",
+          "name": "Room 202 - Chemistry Laboratory",
+          "type": "laboratory",
+          "floor": 2,
+          "position": {
+            "row": 3,
+            "col": 11,
+            "x": 11.0,
+            "y": 3.0
+          },
+          "description": "Chemistry laboratory with fume hoods",
+          "department": "Science",
+          "isAccessible": true,
+          "amenities": ["lab_equipment", "fume_hoods", "safety_equipment"]
+        },
+        {
+          "id": "203",
+          "name": "Room 203 - Mathematics Classroom",
+          "type": "classroom",
+          "floor": 2,
+          "position": {
+            "row": 7,
+            "col": 3,
+            "x": 3.0,
+            "y": 7.0
+          },
+          "description": "Mathematics classroom with smart board",
+          "department": "Mathematics",
+          "isAccessible": true,
+          "amenities": ["smart_board", "graphing_calculators", "air_conditioning"]
+        },
+        {
+          "id": "204",
+          "name": "Room 204 - Principal's Office",
+          "type": "office",
+          "floor": 2,
+          "position": {
+            "row": 7,
+            "col": 11,
+            "x": 11.0,
+            "y": 7.0
+          },
+          "description": "Principal's office and administrative area",
+          "department": "Administration",
+          "isAccessible": true,
+          "amenities": ["conference_table", "computers", "printer"]
+        }
+      ],
+      "specialLocations": {
+        "stairs_2": {
+          "row": 6,
+          "col": 7,
+          "x": 7.0,
+          "y": 6.0
+        },
+        "elevator_2": {
+          "row": 1,
+          "col": 7,
+          "x": 7.0,
+          "y": 1.0
+        }
+      }
+    }
+  ]
+}
